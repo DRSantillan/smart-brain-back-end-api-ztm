@@ -56,6 +56,35 @@ app.post('/register', (req, res) => {
 	res.json(smartBrainDB.users[smartBrainDB.users.length - 1]);
 });
 
+app.get('/profile/:id', (req, res) => {
+	const { id } = req.params;
+	let userFound = false;
+	smartBrainDB.users.forEach((user) => {
+		if (user.id === id) {
+			userFound = true;
+			return res.json(user);
+		}
+	});
+	if (!userFound) {
+		res.status(400).json('no such user');
+	}
+});
+
+app.put('/image', (req,res)=> {
+    const { id } = req.body;
+	let userFound = false;
+	smartBrainDB.users.forEach((user) => {
+		if (user.id === id) {
+			userFound = true;
+            user.entries++;
+			return res.json(user.entries);
+		}
+	});
+	if (!userFound) {
+		res.status(400).json('no such user');
+	}
+})
+
 app.post('/register', (req, res) => {
 	res.json('registered');
 });
