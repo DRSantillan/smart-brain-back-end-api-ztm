@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "API Server for Smart Brain Front End",
   "main": "index.js",
+  "scripts": {
+    "start": "nodemon server"
+  },
+  "type": "module",
   "repository": "git@github.com:DRSantillan/smart-brain-back-end-api-ztm.git",
   "author": "Dean <dean@deansantillan.com>",
   "license": "MIT",
+
   "devDependencies": {
     "nodemon": "^2.0.15"
   },
