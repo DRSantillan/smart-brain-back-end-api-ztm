@@ -1,0 +1,15 @@
+{
+  "name": "smart-brain-back-end-api-ztm",
+  "version": "1.0.0",
+  "description": "API Server for Smart Brain Front End",
+  "main": "index.js",
+  "repository": "git@github.com:DRSantillan/smart-brain-back-end-api-ztm.git",
+  "author": "Dean <dean@deansantillan.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
