@@ -26,19 +26,34 @@ const smartBrainDB = {
 };
 
 app.get('/', (req, res) => {
-	res.send('getting from the api server.');
+	res.send(smartBrainDB.users);
 });
 
 app.post('/signin', (req, res) => {
-	console.log(req.body);
+	const { email, password } = req.body;
 	if (
-		req.body.email === smartBrainDB.users[0].email &&
-		req.body.password === smartBrainDB.users[0].password
+		email === smartBrainDB.users[0].email &&
+		password === smartBrainDB.users[0].password
 	) {
 		res.json('success');
 	} else {
 		res.status(400).json('error logging in');
 	}
+});
+
+app.post('/register', (req, res) => {
+	const { email, password, name } = req.body;
+
+	smartBrainDB.users.push({
+		id: '125',
+		name,
+		email,
+		password,
+		entries: 0,
+		joined: new Date(),
+	});
+
+	res.json(smartBrainDB.users[smartBrainDB.users.length - 1]);
 });
 
 app.post('/register', (req, res) => {
