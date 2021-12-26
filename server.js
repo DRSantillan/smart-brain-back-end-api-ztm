@@ -1,16 +1,18 @@
 import express from 'express';
 import bcrypt from 'bcrypt-nodejs';
+import cors from 'cors';
 
 const apiPort = '8000';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 const smartBrainDB = {
 	users: [
 		{
 			id: '123',
 			name: 'John',
-			email: 'john@gmail.com',
+			email: 'gaijincoach@hotmail.com',
 			password: '123',
 			entries: 0,
 			joined: new Date(),
@@ -24,11 +26,13 @@ const smartBrainDB = {
 			joined: new Date(),
 		},
 	],
-    login: [{
-        id: '043',
-        hash: '',
-        email: 'john@gmail.com'
-    }]
+	login: [
+		{
+			id: '043',
+			hash: '',
+			email: 'gaijincoach@hotmail.com',
+		},
+	],
 };
 // Main Endpoint
 app.get('/', (req, res) => {
@@ -41,7 +45,7 @@ app.post('/signin', (req, res) => {
 		email === smartBrainDB.users[0].email &&
 		password === smartBrainDB.users[0].password
 	) {
-		res.json('success');
+		res.json(smartBrainDB.users[0]);
 	} else {
 		res.status(400).json('error logging in');
 	}
@@ -49,9 +53,9 @@ app.post('/signin', (req, res) => {
 // Regist Endpoint
 app.post('/register', (req, res) => {
 	const { email, password, name } = req.body;
-    bcrypt.hash(password, null,null, (err, hash) => {
-        console.log(hash)
-    })
+	bcrypt.hash(password, null, null, (err, hash) => {
+		console.log(hash);
+	});
 	smartBrainDB.users.push({
 		id: '125',
 		name,
@@ -94,7 +98,7 @@ app.put('/image', (req, res) => {
 });
 
 app.listen(8000, () => {
-	console.log(`app is running on port ${apiPort}`);
+	console.log(`SmartBrain application is running on port ${apiPort}`);
 });
 
 // /signin > post
