@@ -5,8 +5,8 @@ import knex from 'knex';
 
 const postgresDB = knex({
 	client: 'pg',
-	host: 'localhost',
-	user: '',
+	host: '127.0.0.1',
+	user: 'ecomdean',
 	password: '',
 	database: 'smart-brain',
 });
