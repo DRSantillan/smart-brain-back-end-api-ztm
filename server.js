@@ -1,7 +1,17 @@
 import express from 'express';
 import bcrypt from 'bcrypt-nodejs';
 import cors from 'cors';
+import knex from 'knex';
 
+const postgresDB = knex({
+	client: 'pg',
+	host: 'localhost',
+	user: '',
+	password: '',
+	database: 'smart-brain',
+});
+
+console.log(postgresDB.select('*').from('users'));
 const apiPort = '8000';
 
 const app = express();
