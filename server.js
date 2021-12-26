@@ -1,4 +1,5 @@
 import express from 'express';
+import bcrypt from 'bcrypt-nodejs';
 
 const apiPort = '8000';
 
@@ -23,12 +24,17 @@ const smartBrainDB = {
 			joined: new Date(),
 		},
 	],
+    login: [{
+        id: '043',
+        hash: '',
+        email: 'john@gmail.com'
+    }]
 };
-
+// Main Endpoint
 app.get('/', (req, res) => {
 	res.send(smartBrainDB.users);
 });
-
+// SignIn Endpoint
 app.post('/signin', (req, res) => {
 	const { email, password } = req.body;
 	if (
@@ -40,10 +46,12 @@ app.post('/signin', (req, res) => {
 		res.status(400).json('error logging in');
 	}
 });
-
+// Regist Endpoint
 app.post('/register', (req, res) => {
 	const { email, password, name } = req.body;
-
+    bcrypt.hash(password, null,null, (err, hash) => {
+        console.log(hash)
+    })
 	smartBrainDB.users.push({
 		id: '125',
 		name,
@@ -70,23 +78,19 @@ app.get('/profile/:id', (req, res) => {
 	}
 });
 
-app.put('/image', (req,res)=> {
-    const { id } = req.body;
+app.put('/image', (req, res) => {
+	const { id } = req.body;
 	let userFound = false;
 	smartBrainDB.users.forEach((user) => {
 		if (user.id === id) {
 			userFound = true;
-            user.entries++;
+			user.entries++;
 			return res.json(user.entries);
 		}
 	});
 	if (!userFound) {
 		res.status(400).json('no such user');
 	}
-})
-
-app.post('/register', (req, res) => {
-	res.json('registered');
 });
 
 app.listen(8000, () => {
