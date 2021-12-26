@@ -6,7 +6,8 @@ import knex from 'knex';
 const postgresDB = knex({
 	client: 'pg',
 	host: 'localhost',
-	user: '',
+    port: '5432',
+	user: 'ecomdean',
 	password: '',
 	database: 'smart-brain',
 });
@@ -63,17 +64,25 @@ app.post('/signin', (req, res) => {
 // Regist Endpoint
 app.post('/register', (req, res) => {
 	const { email, password, name } = req.body;
-	bcrypt.hash(password, null, null, (err, hash) => {
-		console.log(hash);
-	});
-	smartBrainDB.users.push({
-		id: '125',
-		name,
-		email,
-		password,
-		entries: 0,
-		joined: new Date(),
-	});
+	postgresDB('users')
+		.insert({
+			name: name,
+			email: email,
+			joined: new Date(),
+		})
+		.then(console.log);
+
+	// bcrypt.hash(password, null, null, (err, hash) => {
+	// 	console.log(hash);
+	// });
+	// smartBrainDB.users.push({
+	// 	id: '125',
+	// 	name,
+	// 	email,
+	// 	password,
+	// 	entries: 0,
+	// 	joined: new Date(),
+	// });
 
 	res.json(smartBrainDB.users[smartBrainDB.users.length - 1]);
 });
