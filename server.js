@@ -2,11 +2,11 @@ import express from 'express';
 import bcrypt from 'bcrypt-nodejs';
 import cors from 'cors';
 import knex from 'knex';
-import handleRegistration from './register.js';
-import handleUserSignin from './signin.js';
-import handleProfileID from './profile.js';
-import { handleApiCall, handleImage } from './image.js';
-import handleDefaultEndPoint from './home.js';
+import handleRegistration from './controllers/register.js';
+import handleUserSignin from './controllers/signin.js';
+import handleProfileID from './controllers/profile.js';
+import { handleApiCall, handleImage } from './controllers/image.js';
+import handleDefaultEndPoint from './controllers/home.js';
 
 const postgresDB = knex({
 	client: 'pg',
