@@ -5,18 +5,24 @@ import knex from 'knex';
 
 const postgresDB = knex({
 	client: 'pg',
-	host: '127.0.0.1',
-	user: 'ecomdean',
-	password: '',
-	database: 'smart-brain',
+	connection: {
+		host: '127.0.0.1',
+		user: 'ecomdean',
+		password: '',
+		database: 'smart-brain',
+	},
 });
 
-console.log(postgresDB.select('*').from('users'));
+//console.log(postgresDB.select('*').from('users'));
+
+//postgresDB.select('*').from('users').then(data => console.log(data))
+
 const apiPort = '8000';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 const smartBrainDB = {
 	users: [
 		{
@@ -63,9 +69,11 @@ app.post('/signin', (req, res) => {
 // Regist Endpoint
 app.post('/register', (req, res) => {
 	const { email, password, name } = req.body;
-	bcrypt.hash(password, null, null, (err, hash) => {
-		console.log(hash);
-	});
+	postgresDB('users').insert({
+		email: email,
+		name: name,
+		joined: new Date()
+	}).then(data => console.log(data))
 	smartBrainDB.users.push({
 		id: '125',
 		name,
