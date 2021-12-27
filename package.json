@@ -4,7 +4,8 @@
   "description": "API Server for Smart Brain Front End",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server"
+    "start": "node server.js",
+    "start:dev": "nodemon server"
   },
   "type": "module",
   "repository": "git@github.com:DRSantillan/smart-brain-back-end-api-ztm.git",
