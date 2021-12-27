@@ -36,6 +36,8 @@ app.get('/profile/:id', handleProfileID(postgresDB));
 app.put('/image', handleImage(postgresDB));
 app.put('/imageurl', handleApiCall(req, res));
 
-app.listen(8000, () => {
-	console.log(`SmartBrain application is running on port ${apiPort}`);
+app.listen(process.env.PORT || 8000, () => {
+	console.log(
+		`SmartBrain application is running on port ${process.env.PORT}`
+	);
 });
