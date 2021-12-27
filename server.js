@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcrypt-nodejs';
 import cors from 'cors';
 import knex from 'knex';
+import e from 'express';
 
 const postgresDB = knex({
 	client: 'pg',
@@ -19,61 +20,66 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const smartBrainDB = {
-	users: [
-		{
-			id: '123',
-			name: 'John',
-			email: 'gaijincoach@hotmail.com',
-			password: '123',
-			entries: 0,
-			joined: new Date(),
-		},
-		{
-			id: '124',
-			name: 'Sally',
-			email: 'sally@gmail.com',
-			password: '123',
-			entries: 0,
-			joined: new Date(),
-		},
-	],
-	login: [
-		{
-			id: '043',
-			hash: '',
-			email: 'gaijincoach@hotmail.com',
-		},
-	],
-};
 // Main Endpoint
 app.get('/', (req, res) => {
-	res.send(smartBrainDB.users);
+	postgresDB
+		.select('*')
+		.from('users')
+		.then((data) => {
+			res.json(data);
+		})
+		.catch((error) => res.status(400).json(error));
 });
 // SignIn Endpoint
 app.post('/signin', (req, res) => {
 	const { email, password } = req.body;
-	if (
-		email === smartBrainDB.users[0].email &&
-		password === smartBrainDB.users[0].password
-	) {
-		res.json(smartBrainDB.users[0]);
-	} else {
-		res.status(400).json('error logging in');
-	}
+	postgresDB
+		.select('email', 'hash')
+		.from('login')
+		.where({ email })
+		.then((data) => {
+			const isValidLogin = bcrypt.compareSync(password, data[0].hash);
+			if (isValidLogin) {
+				return postgresDB
+					.select('*')
+					.from('users')
+					.where({ email })
+					.then((user) => res.json(user[0]))
+					.catch((error) =>
+						res.status(400).json('unable to get user')
+					);
+			} else {
+				res.status(400).json('wrong credentials');
+			}
+		})
+		.catch((error) => res.status(400).json('wrong credentials'));
 });
 // Register Endpoint
 app.post('/register', (req, res) => {
 	const { email, password, name } = req.body;
-	postgresDB('users')
-		.returning('*')
-		.insert({
-			email: email,
-			name: name,
-			joined: new Date(),
-		})
-		.then((user) => {
-			res.json(user[0]);
+	const hash = bcrypt.hashSync(password);
+	postgresDB
+		.transaction((trx) => {
+			trx.insert({
+				hash: hash,
+				email: email,
+			})
+				.into('login')
+				.returning('email')
+				.then((loginEmail) => {
+					return trx('users')
+						.returning('*')
+						.insert({
+							email: loginEmail[0],
+							name: name,
+							joined: new Date(),
+						})
+						.then((user) => {
+							res.json(user[0]);
+						});
+				})
+				.then(trx.commit)
+				.catch(trx.rollback);
 		})
 		.catch((error) => res.status(400).json('unable to register'));
 });
