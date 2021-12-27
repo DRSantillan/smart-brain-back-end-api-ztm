@@ -1,7 +1,7 @@
 {
   "name": "smart-brain-back-end-api-ztm",
   "version": "1.0.0",
-  "description": "API Server for Smart Brain Front End",
+  "description": "API Server for Smart Brain Front End!",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
