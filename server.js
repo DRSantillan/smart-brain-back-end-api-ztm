@@ -2,7 +2,7 @@ import express from 'express';
 import bcrypt from 'bcrypt-nodejs';
 import cors from 'cors';
 import knex from 'knex';
-import handleRegistration from './controllers/register/register';
+import handleRegistration from '../controllers/register/register';
 import handleUserSignin from './controllers/signin';
 import handleProfileID from './controllers/profile';
 import { handleApiCall, handleImage } from './controllers/image';
