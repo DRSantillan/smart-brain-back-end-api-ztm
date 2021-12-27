@@ -13,10 +13,6 @@ const postgresDB = knex({
 	},
 });
 
-//console.log(postgresDB.select('*').from('users'));
-
-//postgresDB.select('*').from('users').then(data => console.log(data))
-
 const apiPort = '8000';
 
 const app = express();
@@ -66,60 +62,48 @@ app.post('/signin', (req, res) => {
 		res.status(400).json('error logging in');
 	}
 });
-// Regist Endpoint
+// Register Endpoint
 app.post('/register', (req, res) => {
 	const { email, password, name } = req.body;
-	postgresDB('users').insert({
-		email: email,
-		name: name,
-		joined: new Date()
-	}).then(data => console.log(data))
-	smartBrainDB.users.push({
-		id: '125',
-		name,
-		email,
-		password,
-		entries: 0,
-		joined: new Date(),
-	});
-
-	res.json(smartBrainDB.users[smartBrainDB.users.length - 1]);
+	postgresDB('users')
+		.returning('*')
+		.insert({
+			email: email,
+			name: name,
+			joined: new Date(),
+		})
+		.then((user) => {
+			res.json(user[0]);
+		})
+		.catch((error) => res.status(400).json('unable to register'));
 });
 
 app.get('/profile/:id', (req, res) => {
 	const { id } = req.params;
-	let userFound = false;
-	smartBrainDB.users.forEach((user) => {
-		if (user.id === id) {
-			userFound = true;
-			return res.json(user);
-		}
-	});
-	if (!userFound) {
-		res.status(400).json('no such user');
-	}
+	postgresDB
+		.select('*')
+		.from('users')
+		.where({ id })
+		.then((user) => {
+			if (user.length) {
+				res.json(user[0]);
+			} else {
+				res.status(400).json('No User Found');
+			}
+		})
+		.catch((error) => res.status(400).json('error getting user'));
 });
 
 app.put('/image', (req, res) => {
 	const { id } = req.body;
-	let userFound = false;
-	smartBrainDB.users.forEach((user) => {
-		if (user.id === id) {
-			userFound = true;
-			user.entries++;
-			return res.json(user.entries);
-		}
-	});
-	if (!userFound) {
-		res.status(400).json('no such user');
-	}
+	postgresDB('users')
+		.where({ id })
+		.increment('entries', 1)
+		.returning('*')
+		.then((entries) => res.json(entries[0]))
+		.catch((error) => res.status(400).json('not updating'));
 });
 
 app.listen(8000, () => {
 	console.log(`SmartBrain application is running on port ${apiPort}`);
 });
-
-// /signin > post
-// /register > post
-// /profile/:userid > get > user
-// /image > put > user
