@@ -2,7 +2,7 @@ import express from 'express';
 import bcrypt from 'bcrypt-nodejs';
 import cors from 'cors';
 import knex from 'knex';
-import handleRegistration from '../smart-brain-back-end-api-ztm/controllers/register.js';
+import handleRegistration from './app/controllers/register.js';
 import handleUserSignin from './controllers/signin';
 import handleProfileID from './controllers/profile';
 import { handleApiCall, handleImage } from './controllers/image';
