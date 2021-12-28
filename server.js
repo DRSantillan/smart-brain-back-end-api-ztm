@@ -11,8 +11,7 @@ import handleDefaultEndPoint from './controllers/home.js';
 const postgresDB = knex({
 	client: 'pg',
 	connection: {
-		connectionString:
-			'postgres://qzrvdcryiukuaf:653b0358bfc86f18a3e2388983225fa6693bca8ea5c5e2c93b4b956bf91cc838@ec2-52-72-252-211.compute-1.amazonaws.com:5432/d17t0p6e4bod57',
+		connectionString: process.env.DATABASE_URL,
 		ssl: true,
 	},
 });
