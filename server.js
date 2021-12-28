@@ -11,10 +11,8 @@ import handleDefaultEndPoint from './controllers/home.js';
 const postgresDB = knex({
 	client: 'pg',
 	connection: {
-		host: '127.0.0.1',
-		user: 'ecomdean',
-		password: '',
-		database: 'smart-brain',
+		host: process.env.DATABASE_URL,
+		ssl: true,
 	},
 });
 
@@ -34,7 +32,9 @@ app.post('/register', handleRegistration(postgresDB, bcrypt));
 app.get('/profile/:id', handleProfileID(postgresDB));
 // Image count update Endpoint
 app.put('/image', handleImage(postgresDB));
-app.post('/imageurl', (req,res) => {handleApiCall(req, res)});
+app.post('/imageurl', (req, res) => {
+	handleApiCall(req, res);
+});
 
 app.listen(process.env.PORT || 8000, () => {
 	console.log(
