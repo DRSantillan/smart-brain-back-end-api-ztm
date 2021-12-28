@@ -34,7 +34,7 @@ app.post('/register', handleRegistration(postgresDB, bcrypt));
 app.get('/profile/:id', handleProfileID(postgresDB));
 // Image count update Endpoint
 app.put('/image', handleImage(postgresDB));
-app.post('/imageurl', handleApiCall());
+app.post('/imageurl', handleApiCall(req, res));
 
 app.listen(process.env.PORT || 8000, () => {
 	console.log(
