@@ -6,6 +6,7 @@ const handleDefaultEndPoint = (postgresDB) => (req, res) => {
 	// 		res.json(data);
 	// 	})
 	// 	.catch((error) => res.status(400).json(error));
+	res.send('it is up and running');
 };
 
 export default handleDefaultEndPoint;
