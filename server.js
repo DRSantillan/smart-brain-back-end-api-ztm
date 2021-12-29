@@ -8,6 +8,7 @@ import handleProfileID from './controllers/profile.js';
 import { handleApiCall, handleImage } from './controllers/image.js';
 import handleDefaultEndPoint from './controllers/home.js';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 const postgresDB = knex({
 	client: 'pg',
 	connection: {
